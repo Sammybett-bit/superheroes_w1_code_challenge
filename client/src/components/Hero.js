@@ -2,29 +2,41 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 function Hero() {
-  const [{ data: hero, error, status }, setHero] = useState({
-    data: null,
-    error: null,
-    status: "pending",
-  });
   const { id } = useParams();
+  const [hero, setHero] = useState(null);
+  const [error, setError] = useState(null);
+  const [status, setStatus] = useState("pending");
 
   useEffect(() => {
-    fetch(`/heroes/${id}`).then((r) => {
-      if (r.ok) {
-        r.json().then((hero) =>
-          setHero({ data: hero, error: null, status: "resolved" })
-        );
-      } else {
-        r.json().then((err) =>
-          setHero({ data: null, error: err.error, status: "rejected" })
-        );
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://localhost:5555/heroes/${id}`);
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          setError(errorData);
+          setStatus("rejected");
+        } else {
+          const heroData = await response.json();
+          setHero(heroData);
+          setStatus("resolved");
+        }
+      } catch (error) {
+        setError(error);
+        setStatus("rejected");
       }
-    });
+    };
+
+    fetchData();
   }, [id]);
 
-  if (status === "pending") return <h1>Loading...</h1>;
-  if (status === "rejected") return <h1>Error: {error.error}</h1>;
+  if (status === "pending") {
+    return <h1>Loading...</h1>;
+  }
+
+  if (status === "rejected") {
+    return <h1>Error: {error ? error.message : "Network response was not ok"}</h1>;
+  }
 
   return (
     <section>
@@ -34,7 +46,7 @@ function Hero() {
       <h3>Powers:</h3>
       <ul>
         {hero.powers.map((power) => (
-          <li key={hero.id}>
+          <li key={power.id}>
             <Link to={`/powers/${power.id}`}>{power.name}</Link>
           </li>
         ))}

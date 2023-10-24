@@ -30,7 +30,7 @@ function PowerEditForm() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    fetch(`/powers/${power.id}`, {
+    fetch(`http://localhost:5555/powers/${power.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -40,7 +40,7 @@ function PowerEditForm() {
       }),
     }).then((r) => {
       if (r.ok) {
-        history.push(`/powers/${power.id}`);
+        history.push(`http://localhost:5555/powers/${power.id}`);
       } else {
         r.json().then((err) =>
           setPower({ data: power, errors: err.errors, status: "rejected" })

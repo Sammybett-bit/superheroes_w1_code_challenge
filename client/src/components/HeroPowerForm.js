@@ -11,13 +11,13 @@ function HeroPowerForm() {
   const history = useHistory();
 
   useEffect(() => {
-    fetch("/heroes")
+    fetch("http://localhost:5555/heroes")
       .then((r) => r.json())
       .then(setHeroes);
   }, []);
 
   useEffect(() => {
-    fetch("/powers")
+    fetch("http://localhost:5555/powers")
       .then((r) => r.json())
       .then(setPowers);
   }, []);
@@ -37,7 +37,7 @@ function HeroPowerForm() {
       body: JSON.stringify(formData),
     }).then((r) => {
       if (r.ok) {
-        history.push(`/heroes/${heroId}`);
+        history.push(`http://localhost:5555/heroes/${heroId}`);
       } else {
         r.json().then((err) => setFormErrors(err.errors));
       }

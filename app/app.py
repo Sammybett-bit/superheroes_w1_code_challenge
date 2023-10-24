@@ -3,6 +3,7 @@ from flask_migrate import Migrate
 from models import db, Hero, Power, HeroPower
 from flask_cors import CORS
 
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -17,14 +18,17 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def home():
-    return '<h1>id": 1, "name": "Kamala Khan", "super_name": "Ms. Marvel</h1>'
+    return 'hello world'
            
+
 
 @app.route('/heroes', methods=['GET'])
 def get_heroes():
+
     heroes = Hero.query.all()
+    print(heroes)
     hero_list = [{'id': hero.id, 'name': hero.name, 'super_name': hero.super_name} for hero in heroes]
     return jsonify(hero_list)
 
@@ -102,4 +106,4 @@ def create_hero_power():
     return jsonify(hero_info), 201
 
 if __name__ == '_main_':
-    app.run(port=5555)
+    app.run(port=5000)
