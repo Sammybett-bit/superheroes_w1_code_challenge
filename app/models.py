@@ -10,7 +10,7 @@ metadata = MetaData(naming_convention={
 db = SQLAlchemy(metadata=metadata)
 
 class Hero(db.Model, SerializerMixin):
-    tablename = 'heroes' 
+    __tablename__ = 'heroes' 
     serialize_rules = ('-powers.heroes', '-heropowers.power')
 
     id = db.Column(db.Integer, primary_key=True)
@@ -25,7 +25,7 @@ class Hero(db.Model, SerializerMixin):
         return f'<Hero {self.name} aka {self.super_name}>'
 
 class Power(db.Model, SerializerMixin):
-    tablename = 'powers' 
+    __tablename__ = 'powers' 
     serialize_rules = ('-heroes.powers', '-heropowers.hero')
 
     id = db.Column(db.Integer, primary_key=True)
@@ -40,7 +40,7 @@ class Power(db.Model, SerializerMixin):
         return f'<Power {self.name} aka {self.description}'
 
 class HeroPower(db.Model, SerializerMixin):
-    tablename = 'heropowers' 
+    __tablename__ = 'heropowers' 
     serialize_rules = ('-hero.powers', '-power.heroes')
 
     id = db.Column(db.Integer, primary_key=True)
